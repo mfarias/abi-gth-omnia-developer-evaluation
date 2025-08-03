@@ -83,7 +83,7 @@ public class Sale : BaseEntity
     {
         CreatedAt = DateTime.UtcNow;
         SaleDate = DateTime.UtcNow;
-        Status = SaleStatus.Pending;
+        Status = SaleStatus.Confirmed;
         SaleNumber = GenerateSaleNumber();
     }
 
@@ -162,21 +162,6 @@ public class Sale : BaseEntity
             RecalculateTotal();
             UpdatedAt = DateTime.UtcNow;
         }
-    }
-
-    /// <summary>
-    /// Confirms the sale
-    /// </summary>
-    public void Confirm()
-    {
-        if (Status == SaleStatus.Cancelled)
-            throw new InvalidOperationException("Cannot confirm a cancelled sale");
-
-        if (!Items.Any())
-            throw new InvalidOperationException("Cannot confirm a sale without items");
-
-        Status = SaleStatus.Confirmed;
-        UpdatedAt = DateTime.UtcNow;
     }
 
     /// <summary>

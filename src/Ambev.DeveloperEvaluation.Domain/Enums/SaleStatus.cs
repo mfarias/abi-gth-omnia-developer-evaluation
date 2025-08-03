@@ -2,7 +2,6 @@
 
 public enum SaleStatus
 {
-    Pending = 0,
-    Confirmed = 1,
-    Cancelled = 2
+    Confirmed = 0,
+    Cancelled = 1
 }
