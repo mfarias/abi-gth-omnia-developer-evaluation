@@ -76,7 +76,8 @@ public class CreateSaleIntegrationTests : IDisposable
 
         var act = async () => await _handler.Handle(command, CancellationToken.None);
 
-        await act.Should().ThrowAsync<FluentValidation.ValidationException>();
+        await act.Should().ThrowAsync<FluentValidation.ValidationException>()
+            .WithMessage("*Cannot sell more than 20 identical items*");
     }
 
     [Fact]
@@ -100,10 +101,11 @@ public class CreateSaleIntegrationTests : IDisposable
         return new CreateSaleCommand
         {
             CustomerId = faker.Random.Guid(),
-            CustomerName = faker.Person.FullName,
+            CustomerName = faker.Name.FullName(),
             CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
             BranchName = faker.Company.CompanyName(),
+            BranchLocation = faker.Address.FullAddress(),
             Items = new List<CreateSaleItemCommand>
             {
                 new CreateSaleItemCommand
@@ -124,10 +126,11 @@ public class CreateSaleIntegrationTests : IDisposable
         return new CreateSaleCommand
         {
             CustomerId = faker.Random.Guid(),
-            CustomerName = faker.Person.FullName,
+            CustomerName = faker.Name.FullName(),
             CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
             BranchName = faker.Company.CompanyName(),
+            BranchLocation = faker.Address.FullAddress(),
             Items = new List<CreateSaleItemCommand>
             {
                 new CreateSaleItemCommand
@@ -156,10 +159,11 @@ public class CreateSaleIntegrationTests : IDisposable
         return new CreateSaleCommand
         {
             CustomerId = faker.Random.Guid(),
-            CustomerName = faker.Person.FullName,
+            CustomerName = faker.Name.FullName(),
             CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
             BranchName = faker.Company.CompanyName(),
+            BranchLocation = faker.Address.FullAddress(),
             Items = new List<CreateSaleItemCommand>
             {
                 new CreateSaleItemCommand

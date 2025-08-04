@@ -6,6 +6,7 @@ using Ambev.DeveloperEvaluation.ORM.Repositories;
 using AutoMapper;
 using Bogus;
 using FluentAssertions;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -114,7 +115,7 @@ public class UpdateSaleIntegrationTests : IDisposable
                 {
                     ProductId = Guid.NewGuid(),
                     ProductName = "Test Product",
-                    ProductSku = "TEST-SKU-123",
+                    ProductSku = "TEST-SKU-001",
                     UnitPrice = 10m,
                     Quantity = 8
                 }
@@ -141,7 +142,7 @@ public class UpdateSaleIntegrationTests : IDisposable
         var act = async () => await _handler.Handle(command, CancellationToken.None);
 
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("*cancelled sale*");
+            .WithMessage("*Cannot update cancelled sale*");
     }
 
     private async Task<Sale> CreateSaleInDatabase()
@@ -152,10 +153,11 @@ public class UpdateSaleIntegrationTests : IDisposable
             Id = Guid.NewGuid(),
             SaleNumber = faker.Random.AlphaNumeric(10),
             CustomerId = faker.Random.Guid(),
-            CustomerName = faker.Person.FullName,
+            CustomerName = faker.Name.FullName(),
             CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
             BranchName = faker.Company.CompanyName(),
+            BranchLocation = faker.Address.FullAddress(),
             SaleDate = DateTime.UtcNow,
             Status = SaleStatus.Confirmed
         };
@@ -189,10 +191,11 @@ public class UpdateSaleIntegrationTests : IDisposable
             Id = Guid.NewGuid(),
             SaleNumber = faker.Random.AlphaNumeric(10),
             CustomerId = faker.Random.Guid(),
-            CustomerName = faker.Person.FullName,
+            CustomerName = faker.Name.FullName(),
             CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
             BranchName = faker.Company.CompanyName(),
+            BranchLocation = faker.Address.FullAddress(),
             SaleDate = DateTime.UtcNow,
             Status = SaleStatus.Confirmed
         };
@@ -205,6 +208,7 @@ public class UpdateSaleIntegrationTests : IDisposable
                 SaleId = sale.Id,
                 ProductId = faker.Random.Guid(),
                 ProductName = faker.Commerce.ProductName(),
+                ProductSku = faker.Commerce.Ean13(),
                 UnitPrice = faker.Random.Decimal(1, 100),
                 Quantity = faker.Random.Int(1, 3),
                 DiscountPercentage = 0
