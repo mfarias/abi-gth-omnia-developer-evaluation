@@ -171,6 +171,13 @@ public class Sale : BaseEntity
     {
         Status = SaleStatus.Cancelled;
         UpdatedAt = DateTime.UtcNow;
+        
+        foreach (var item in Items)
+        {
+            item.Cancel();
+        }
+        
+        RecalculateTotal();
     }
 
     /// <summary>
