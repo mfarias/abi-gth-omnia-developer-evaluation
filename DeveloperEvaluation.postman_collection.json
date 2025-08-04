@@ -1,0 +1,151 @@
+{
+	"info": {
+		"name": "DeveloperEvaluation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Sale",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Extract Sale ID\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"saleId\", jsonData.data.id);\r",
+							"    \r",
+							"    console.log(\"Sale ID extracted: \" + jsonData.data.id);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"customerId\": \"5b9c305c-df4c-4386-b538-42f76b7739e7\",\r\n  \"customerName\": \"Test Customer Name\",\r\n  \"customerEmail\": \"testcustomer@test.com\",\r\n  \"branchId\": \"471a8898-9103-4f0a-9000-c182fdfc7ed5\",\r\n  \"branchName\": \"Test Branch Name\",\r\n  \"branchLocation\": \"Branch Location\",\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"150d60f9-27ba-4186-812f-c89c55f126c5\",\r\n      \"productName\": \"Test Product Name\",\r\n      \"productSku\": \"Test\",\r\n      \"unitPrice\": 2.5,\r\n      \"quantity\": 15\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/sales",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"sales"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Sale By Id",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/sales/{{saleId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"sales",
+						"{{saleId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Sale",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"{{saleId}}\",\r\n  \"itemsToAdd\": [\r\n    {\r\n      \"productId\": \"e5ae6f09-3766-43a5-88ec-e88d2edc7803\",\r\n      \"productName\": \"Test Product 2\",\r\n      \"productSku\": \"Test2\",\r\n      \"unitPrice\": 50.75,\r\n      \"quantity\": 10\r\n    }\r\n  ],\r\n  \"itemsToUpdate\": [\r\n    {\r\n      \"productId\": \"150d60f9-27ba-4186-812f-c89c55f126c5\",\r\n      \"quantity\": 17\r\n    }\r\n  ],\r\n  \"productIdsToRemove\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/sales/{{saleId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"sales",
+						"{{saleId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Sale",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"{{saleId}}\",\r\n  \"cancellationReason\": \"Test cancel\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/sales/{{saleId}}/cancel",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"sales",
+						"{{saleId}}",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8080",
+			"type": "default"
+		},
+		{
+			"key": "saleId",
+			"value": ""
+		}
+	]
+}
