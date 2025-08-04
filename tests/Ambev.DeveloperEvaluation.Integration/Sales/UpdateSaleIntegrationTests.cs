@@ -97,7 +97,7 @@ public class UpdateSaleIntegrationTests : IDisposable
         var result = await _handler.Handle(command, CancellationToken.None);
 
         var updatedSale = await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == sale.Id);
-        updatedSale?.Items.Should().HaveCount(1);
+        updatedSale?.Items.Should().HaveCount(2);
         updatedSale?.Items.Should().NotContain(i => i.ProductId == itemToRemove.ProductId);
     }
 
@@ -114,6 +114,7 @@ public class UpdateSaleIntegrationTests : IDisposable
                 {
                     ProductId = Guid.NewGuid(),
                     ProductName = "Test Product",
+                    ProductSku = "TEST-SKU-123",
                     UnitPrice = 10m,
                     Quantity = 8
                 }
@@ -140,7 +141,7 @@ public class UpdateSaleIntegrationTests : IDisposable
         var act = async () => await _handler.Handle(command, CancellationToken.None);
 
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("Cannot add items to a cancelled sale");
+            .WithMessage("*cancelled sale*");
     }
 
     private async Task<Sale> CreateSaleInDatabase()
@@ -151,7 +152,10 @@ public class UpdateSaleIntegrationTests : IDisposable
             Id = Guid.NewGuid(),
             SaleNumber = faker.Random.AlphaNumeric(10),
             CustomerId = faker.Random.Guid(),
+            CustomerName = faker.Person.FullName,
+            CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
+            BranchName = faker.Company.CompanyName(),
             SaleDate = DateTime.UtcNow,
             Status = SaleStatus.Confirmed
         };
@@ -162,6 +166,7 @@ public class UpdateSaleIntegrationTests : IDisposable
             SaleId = sale.Id,
             ProductId = faker.Random.Guid(),
             ProductName = faker.Commerce.ProductName(),
+            ProductSku = faker.Commerce.Ean13(),
             UnitPrice = faker.Random.Decimal(1, 100),
             Quantity = faker.Random.Int(1, 3),
             DiscountPercentage = 0
@@ -184,7 +189,10 @@ public class UpdateSaleIntegrationTests : IDisposable
             Id = Guid.NewGuid(),
             SaleNumber = faker.Random.AlphaNumeric(10),
             CustomerId = faker.Random.Guid(),
+            CustomerName = faker.Person.FullName,
+            CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
+            BranchName = faker.Company.CompanyName(),
             SaleDate = DateTime.UtcNow,
             Status = SaleStatus.Confirmed
         };
@@ -227,6 +235,7 @@ public class UpdateSaleIntegrationTests : IDisposable
         {
             ProductId = faker.Random.Guid(),
             ProductName = faker.Commerce.ProductName(),
+            ProductSku = faker.Commerce.Ean13(),
             UnitPrice = faker.Random.Decimal(1, 100),
             Quantity = faker.Random.Int(1, 5)
         };

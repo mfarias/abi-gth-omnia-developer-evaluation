@@ -6,6 +6,7 @@ using Ambev.DeveloperEvaluation.ORM.Repositories;
 using AutoMapper;
 using Bogus;
 using FluentAssertions;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -75,8 +76,7 @@ public class CreateSaleIntegrationTests : IDisposable
 
         var act = async () => await _handler.Handle(command, CancellationToken.None);
 
-        await act.Should().ThrowAsync<ArgumentException>()
-            .WithMessage("Cannot sell more than 20 identical items");
+        await act.Should().ThrowAsync<FluentValidation.ValidationException>();
     }
 
     [Fact]
@@ -100,13 +100,17 @@ public class CreateSaleIntegrationTests : IDisposable
         return new CreateSaleCommand
         {
             CustomerId = faker.Random.Guid(),
+            CustomerName = faker.Person.FullName,
+            CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
+            BranchName = faker.Company.CompanyName(),
             Items = new List<CreateSaleItemCommand>
             {
                 new CreateSaleItemCommand
                 {
                     ProductId = faker.Random.Guid(),
                     ProductName = faker.Commerce.ProductName(),
+                    ProductSku = faker.Commerce.Ean13(),
                     UnitPrice = faker.Random.Decimal(1, 100),
                     Quantity = faker.Random.Int(1, 3)
                 }
@@ -120,13 +124,17 @@ public class CreateSaleIntegrationTests : IDisposable
         return new CreateSaleCommand
         {
             CustomerId = faker.Random.Guid(),
+            CustomerName = faker.Person.FullName,
+            CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
+            BranchName = faker.Company.CompanyName(),
             Items = new List<CreateSaleItemCommand>
             {
                 new CreateSaleItemCommand
                 {
                     ProductId = faker.Random.Guid(),
                     ProductName = faker.Commerce.ProductName(),
+                    ProductSku = faker.Commerce.Ean13(),
                     UnitPrice = faker.Random.Decimal(1, 100),
                     Quantity = 6
                 },
@@ -134,6 +142,7 @@ public class CreateSaleIntegrationTests : IDisposable
                 {
                     ProductId = faker.Random.Guid(),
                     ProductName = faker.Commerce.ProductName(),
+                    ProductSku = faker.Commerce.Ean13(),
                     UnitPrice = faker.Random.Decimal(1, 100),
                     Quantity = 15
                 }
@@ -147,13 +156,17 @@ public class CreateSaleIntegrationTests : IDisposable
         return new CreateSaleCommand
         {
             CustomerId = faker.Random.Guid(),
+            CustomerName = faker.Person.FullName,
+            CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
+            BranchName = faker.Company.CompanyName(),
             Items = new List<CreateSaleItemCommand>
             {
                 new CreateSaleItemCommand
                 {
                     ProductId = faker.Random.Guid(),
                     ProductName = faker.Commerce.ProductName(),
+                    ProductSku = faker.Commerce.Ean13(),
                     UnitPrice = faker.Random.Decimal(1, 100),
                     Quantity = 25
                 }

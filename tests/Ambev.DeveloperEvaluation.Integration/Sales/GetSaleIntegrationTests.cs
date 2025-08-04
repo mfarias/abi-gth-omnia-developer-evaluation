@@ -56,8 +56,8 @@ public class GetSaleIntegrationTests : IDisposable
 
         var act = async () => await _handler.Handle(command, CancellationToken.None);
 
-        await act.Should().ThrowAsync<ArgumentException>()
-            .WithMessage("Sale not found");
+        await act.Should().ThrowAsync<KeyNotFoundException>()
+            .WithMessage("*not found");
     }
 
     [Fact]
@@ -98,7 +98,10 @@ public class GetSaleIntegrationTests : IDisposable
             Id = Guid.NewGuid(),
             SaleNumber = faker.Random.AlphaNumeric(10),
             CustomerId = faker.Random.Guid(),
+            CustomerName = faker.Person.FullName,
+            CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
+            BranchName = faker.Company.CompanyName(),
             SaleDate = DateTime.UtcNow,
             Status = SaleStatus.Confirmed
         };
@@ -109,6 +112,7 @@ public class GetSaleIntegrationTests : IDisposable
             SaleId = sale.Id,
             ProductId = faker.Random.Guid(),
             ProductName = faker.Commerce.ProductName(),
+            ProductSku = faker.Commerce.Ean13(),
             UnitPrice = faker.Random.Decimal(1, 100),
             Quantity = faker.Random.Int(1, 5),
             DiscountPercentage = 0
@@ -131,7 +135,10 @@ public class GetSaleIntegrationTests : IDisposable
             Id = Guid.NewGuid(),
             SaleNumber = faker.Random.AlphaNumeric(10),
             CustomerId = faker.Random.Guid(),
+            CustomerName = faker.Person.FullName,
+            CustomerEmail = faker.Internet.Email(),
             BranchId = faker.Random.Guid(),
+            BranchName = faker.Company.CompanyName(),
             SaleDate = DateTime.UtcNow,
             Status = SaleStatus.Confirmed
         };
